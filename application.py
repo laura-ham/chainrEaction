@@ -3,9 +3,23 @@ from subprocess import check_output
 from os import path, chdir, getcwd
 from random import randint
 import connect
+import json
 
 app = Flask(__name__)
 w3, contract = connect.initiate()
+
+# with open('keys.json', mode='w', encoding='utf-8') as f:
+#     json.dump([], f)
+
+global users
+users = {"C1": "0x401943d512de0120888b3271e8380c688e9da1ed", "R1": "0x02f26e196d9c5ea9623e75a46e96da118e4a4735"}
+user_ids = ["0x3a6d23e2cb1cb1852eb2e6e3a4cffd6500a2f538", "0x3b9071e114c56a1ab01620fa4db01d37ae4b4a7f", "0x6ab1d2eba3685badb4ec8e7ee11e11fc27571680", "0x4ce859dbf20f2ef8947632fe3569ceb50c286008", "0xc1ff87f82b8ad5dc504737f953a32e63fa0cbfbf", "0x1f05fa49c4853495f02b9f3bd0e163b781b36259", "0x4866679b42fd0b5da0d2d6b55a1c1c2319af3657", "0x5d916828e373ca913cc34ff19b3fd3858a1195c6", "0x1180e416899c34d33660e45f1b2bada60ce40a67", "0x045df9b38723d8f71e6bb99b80f3e1ab617bea3f"]
+
+result = connect.isRecyclingPlant(w3, contract, users["R1"])
+print(result)
+connect.createplant(w3, contract, users["R1"])
+result = connect.isRecyclingPlant(w3, contract, users["R1"])
+print(result)
 
 def getRandomIdx():
     l = [str(randint(0,10)) for i in range(3)]
@@ -24,6 +38,7 @@ def render_with_user(filename):
 @app.route('/index')
 def hello():
     #return "Hello, World!"
+    print(users)
     return render_template('index.html')
 
 # create user landing page
@@ -56,6 +71,17 @@ def register_new_user():
         ]
     
     id = connect.createUser(w3, contract, curUser, user_type)
+
+    global users
+    users[curUser] = id[1]
+
+    # with open('keys.json', mode='a+', encoding='utf-8') as feedsjson:
+    #     feeds = json.load(feedsjson)
+    #     entry = {}
+    #     entry['user'] = curUser
+    #     entry['id'] = id
+    #     json.dump(entry, feeds)
+
 
     #output = run_node_cmd('createUser', rst)
 
@@ -170,9 +196,9 @@ def buy():
     footprint = request.form.get('val')
     item = request.form.get('tag')
 
-    infosrc = curUser
-    infodst = request.form.get('infodst')
-    
+    infodst = curUser
+    infosrc = request.form.get('infosrc')
+
     rst = [
         "--idx", idx,
         "--type", item_type,
@@ -182,7 +208,17 @@ def buy():
         "--src", infosrc,
         "--dst", infodst,
         ]
-    output = run_node_cmd('addInput', rst)
+    #output = run_node_cmd('addInput', rst)
+
+    print(rst)
+    seller = users[infodst]
+    buyer = users[infosrc]
+
+    if item_type == "Plastic":
+        item_type = 1
+
+    result = connect.buy(w3, contract, buyer, seller, weight, item_type)
+    print(result)
 
     # What page to get back to?
     return_point = "NA"
@@ -197,7 +233,7 @@ def buy():
     else:
         # Should not happen
         print("Can't figure out user")
-    return redirect(url_for(return_point, user=curUser[-1], success_str=output))
+    return redirect(url_for(return_point, user=curUser[-1], success_str=result))
 
 
 @app.route('/recycle', methods = ['POST'])
@@ -214,12 +250,20 @@ def recycle():
     rst = [
         "--idx", idx,
         "--type", item_type,
-        "--footprint", footprint,
+        # "--footprint", footprint,
         "--weight", weight,
         "--src", infosrc,
         "--dst", infodst,
         ]
-    output = run_node_cmd('addItemInfo', rst)
+    #output = run_node_cmd('addItemInfo', rst)
+    buyer = users[infodst]
+    seller = users[infosrc]
+
+    if item_type == "Plastic":
+        item_type = 1
+
+    result = connect.recycle(w3, contract, buyer, seller, weight, item_type)
+
 
     # What page to get back to?
     return_point = "NA"
@@ -234,5 +278,5 @@ def recycle():
     else:
         # Should not happen
         print("Can't figure out user")
-    return redirect(url_for(return_point, user=curUser[-1], success_str=output))
+    return redirect(url_for(return_point, user=curUser[-1], success_str=result))
 
