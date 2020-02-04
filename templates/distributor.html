@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Distributor
+{% endblock %}
+
+{% block header %}
+<h1> RIPS - Distributor</h1>
+<img src="{{ url_for('static', filename='distributor.jpg') }}" width="300">
+{% endblock %}
+
+{% block aboveLogs %}
+{% endblock %}
+
+
+{% block belowLogs %}
+<div id="add-div">
+    <h2>Purchase</h2>
+    <form action="input" method="post">
+        <input type="hidden"  name="user" id="userid" value="F{{user}}">
+        <select name="type">
+            <option value="Plastic">Plastic</option>
+            <option value="Glass">Glass</option>
+            <option value="Glass">Lithium Batteries</option>
+          </select>            
+        <input type="text"  name="weight" id="weight" placeholder="Weight (e.g. 100 grams)">
+        <input type="text"  name="infosrc" id="infosrc" placeholder="Good coming from (e.g. S3)">
+        <!-- <select name="infosrc">
+            <option value="S0">From Shop #0</option>
+            <option value="S1">From Shop #1</option>
+          </select>             -->
+        <input type="submit" value="Input Weight"><br>
+    </form>
+    <h4>{{ success_str }}</h4>
+</div>
+<div id="add-div">
+      <h2>Recycle</h2>
+      <form action="recycle" method="post">
+          <input type="hidden"  name="user" id="userid" value="F{{user}}">
+          <select name="type">
+              <option value="Plastic">Plastic</option>
+              <option value="Glass">Glass</option>
+              <option value="Glass">Lithium Batteries</option>
+            </select>            
+          <input type="text"  name="weight" id="weight" placeholder="Weight (e.g. 100 grams)">
+          <input type="text"  name="infodst" id="infodst" placeholder="Good going to (e.g. S3)">
+          <!-- <select name="infodst">
+              <option value="S0">To Shop #0</option>
+              <option value="S1">To Shop #1</option>
+            </select>             -->
+          <input type="submit" value="Recycle Weight"><br>
+      </form>
+      <h4>{{ success_str }}</h4>
+</div>
+<!-- <div id="add-div">
+      <h2>Transactions log</h2>
+      <div id="log-items">
+      </div>
+      <h4>{{ success_str }}</h4>
+</div> -->
+<div id="add-div">
+      <h2>Collected points</h2>
+      <div id="points">
+      </div>
+      <h4>{{ success_str }}</h4>
+</div>
+{% endblock %}   
+

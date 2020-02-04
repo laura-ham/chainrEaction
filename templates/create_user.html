@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+(Create User)
+{% endblock %}
+
+{% block header %}
+<h1> Create User </h1>
+<img src="{{ url_for('static', filename='new_user.png') }}" width="300">
+{% endblock %}
+
+{% block logs %}
+{% endblock %}
+
+{% block aboveLogs %}
+{% endblock %}
+
+{% block belowLogs %}
+<div id="add-div">
+            <h2>Create new user</h2>
+            <form action="register_new_user" method="post">
+                <input type="text"  name="name" id="name" placeholder="Name (e.g. Alice)">
+                <select name="type">
+                    <option value="C">Consumer</option>
+                    <option value="S">Shop</option>
+                    <option value="P">Producer</option>
+                    <option value="R">Recycle Center</option>
+                    <option value="D">Distribution Center</option>
+                  </select>            
+                <input type="submit" value="Create user"><br>
+            </form>
+            <h4>{{ success_str }}</h4>
+    </div>
+{% endblock %} 
+

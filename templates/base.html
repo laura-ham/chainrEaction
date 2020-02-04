@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        RIPS - {% block title %}{% endblock %}
+    </title>
+    <link rel="stylesheet" type="text/css" href="../static/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- <script type=text/javascript src="{{ url_for('static', filename='client.js') }}"></script> -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/favicon-32x32.png">
+    
+</head>
+<body>
+
+
+    <img src="{{ url_for('static', filename='logo.png') }}" align="right">
+
+    {% block header %}{% endblock %}   
+    
+    {% block aboveLogs %}{% endblock %}   
+
+    {% block logs %}{% endblock %}       
+
+    {% block belowLogs %}{% endblock %}   
+
+</body>
+</html>
