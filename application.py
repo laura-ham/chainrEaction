@@ -25,12 +25,13 @@ def getRandomIdx():
     l = [str(randint(0,10)) for i in range(3)]
     return ''.join(l)
 
-def render_with_user(filename):
+def render_with_user(filename, points=0):
     user = request.args.get("user", "0")
     success_str = request.args.get("success_str", "")
     return render_template(
         filename,
         user = user, 
+        points = points,
         success_str = success_str)
 
 # index page
@@ -52,7 +53,13 @@ def create_user():
 @app.route('/leaderboard')
 def leaderboard():
     # return 'CREATE USER'
-    return render_template('leaderboard.html')
+    scores = {}
+    for key,value in users.items():
+        print(value)
+        scores[key] = connect.get_recycled_balance(w3, contract, value)
+    #return scores
+    scores_new = {k: v for k, v in sorted(scores.items(), key=lambda item: item[1], reverse=True)}
+    return render_template('leaderboard.html', scores=scores_new, counter=0)
 
 # create user function
 @app.route('/register_new_user', methods = ['POST'])
@@ -106,8 +113,10 @@ def register_new_user():
 @app.route('/consumer')
 def consumer():
     # return 'CONSUMER INDEX PAGE'
-    user = request.args.get("user", "C0") # C0 is our default
-    return render_with_user('consumer.html')
+    user = request.args.get("user", "C1") # C0 is our default
+    user = users[user]
+    points = connect.get_recycled_balance(w3, contract, user)
+    return render_with_user('consumer.html', points = points)
 
 # consumer page
 @app.route('/shop')

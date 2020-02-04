@@ -14,9 +14,15 @@ Leaderboard
 {% block logs %}
 <div id="leaderboard">
     <h2>Top Returned Recycled Goods:</h2>
-    <div id="top_recycled"></div>
+    <div id="top_recycled">
+        {% for key, score in scores.items(): %}
+        <h3 class="flash">  {{ key }} has a score of {{score }}</h3>
+        {% endfor %}
 
+    </div>
+
+<!-- 
     <h2>Top Purchased Recycled Goods:</h2>
-    <div id="top_purchased"></div>
+    <div id="top_purchased"></div> -->
 </div>
 {% endblock %}

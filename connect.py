@@ -43,15 +43,19 @@ def recycle(w3, contract, buyer, seller, weight, item_type):
     seller = w3.toChecksumAddress(seller)
     contract.functions.recycleWaste(buyer,int(item_type),int(weight)).transact({"from":seller,"gas":1000000})
     contract.functions.verifyWaste(True).transact({"from":buyer,"gas":1000000})
-    contract.functions.buyGoods(buyer, int(item_type), int(weight)).call({"from":seller})
-    result = contract.functions.recycledBalanceOfGoods(seller,int(item_type)).call()
-    print('recycled', result)
-    result = contract.functions.boughtBalanceOfGoods(buyer,int(item_type)).call()
-    print('bought', result)
+    #contract.functions.buyGoods(buyer, int(item_type), int(weight)).call({"from":seller})
+    #result = contract.functions.recycledBalanceOfGoods(seller,int(item_type)).call()
+    #print('recycled', result)
+    #result = contract.functions.boughtBalanceOfGoods(buyer,int(item_type)).call()
+    #print('bought', result)
 
 def createplant(w3, myContract, user):
-    id =  w3.toChecksumAddress(user)
+    id = w3.toChecksumAddress(user)
     myContract.functions.createPlant(True).transact({"from":id})
+
+def get_recycled_balance(w3, contract, user):
+    user = w3.toChecksumAddress(user)
+    return contract.functions.recycledBalanceOfGoods(user,int(1)).call()
 
 # #dummy value for user
 # user = w3.toChecksumAddress("0x755349b9f94f10625a4d5b71ecac86407cf279dd")
